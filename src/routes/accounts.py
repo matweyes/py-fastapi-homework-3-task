@@ -153,7 +153,7 @@ async def request_password_reset(
         select(UserModel).where(
             and_(
                 UserModel.email == reset_data.email,
-                UserModel.is_active == True
+                UserModel.is_active == True  # noqa: E712
             )
         )
     )
