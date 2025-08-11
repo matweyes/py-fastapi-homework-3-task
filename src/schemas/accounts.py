@@ -7,13 +7,17 @@ class BaseUserSchema(BaseModel):
     email: EmailStr
 
 
-class UserRegistrationRequestSchema(BaseUserSchema):
+class PasswordValidationSchema(BaseModel):
     password: str = Field(..., min_length=8)
 
     @field_validator("password", mode="before")
     @classmethod
     def validate_password(cls, value):
         return accounts_validators.validate_password_strength(value)
+
+
+class UserRegistrationRequestSchema(BaseUserSchema, PasswordValidationSchema):
+    pass
 
 
 class UserRegistrationResponseSchema(BaseUserSchema):
@@ -32,31 +36,23 @@ class MessageResponseSchema(BaseModel):
     message: str
 
 
-class PasswordResetRequestSchema(BaseModel):
-    email: EmailStr
+class PasswordResetRequestSchema(BaseUserSchema):
+    pass
 
 
-class PasswordResetResponseSchema(BaseModel):
-    message: str
+class PasswordResetResponseSchema(MessageResponseSchema):
+    pass
 
 
-class PasswordResetCompleteRequestSchema(BaseModel):
-    email: EmailStr
+class PasswordResetCompleteRequestSchema(BaseUserSchema, PasswordValidationSchema):
     token: str
-    password: str = Field(..., min_length=8)
-
-    @field_validator("password", mode="before")
-    @classmethod
-    def validate_password(cls, value):
-        return accounts_validators.validate_password_strength(value)
 
 
-class PasswordResetCompleteResponseSchema(BaseModel):
-    message: str
+class PasswordResetCompleteResponseSchema(MessageResponseSchema):
+    pass
 
 
-class UserLoginRequestSchema(BaseModel):
-    email: EmailStr
+class UserLoginRequestSchema(BaseUserSchema):
     password: str
 
 

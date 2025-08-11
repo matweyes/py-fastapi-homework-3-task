@@ -77,7 +77,7 @@ async def register_user(
 
         db.add(new_user)
         await db.commit()
-        await db.flush()
+        await db.refresh(new_user)
         return new_user
 
     # Raising 409 error in case new user already exists in db
